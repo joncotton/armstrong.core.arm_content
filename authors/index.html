@@ -1,0 +1,319 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+
+    <title>Authors &mdash; armstrong.core.arm_content v0.x documentation</title>
+
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+
+
+    <link rel="stylesheet" href="../_static/rtd.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.x',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/searchtools.js"></script>
+    <link rel="top" title="armstrong.core.arm_content v0.x documentation" href="../" />
+    <link rel="next" title="Publications" href="../publications/" />
+    <link rel="prev" title="Models" href="../models/" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../publications/" title="Publications"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../models/" title="Models"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../">armstrong.core.arm_content v0.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="authors">
+<h1>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h1>
+<p>Armstrong provides you with a custom <tt class="docutils literal"><span class="pre">AuthorsField</span></tt> field for managing
+authors of a given model.  It allows you to link multiple users to a model and
+deal with generating a byline for that model.</p>
+<div class="section" id="authorfield-usage">
+<h2>AuthorField Usage<a class="headerlink" href="#authorfield-usage" title="Permalink to this headline">¶</a></h2>
+<p>You can add it to any model the way you would any other field in Django:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">armstrong.core.arm_content.fields</span> <span class="kn">import</span> <span class="n">AuthorsField</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">MyArticle</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">AuthorsField</span><span class="p">()</span>
+    <span class="c"># the rest of your model...</span>
+</pre></div>
+</div>
+<p>By default, <tt class="docutils literal"><span class="pre">AuthorsField</span></tt> assumes you want to connect to the <tt class="docutils literal"><span class="pre">User</span></tt> model
+in <tt class="docutils literal"><span class="pre">django.contrib.auth</span></tt>.  You can provide your own custom user model by
+providing a model class when you declare the field like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">armstrong.core.arm_content.fields</span> <span class="kn">import</span> <span class="n">AuthorsField</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">myapp.models</span> <span class="kn">import</span> <span class="n">CustomUser</span>
+
+<span class="k">class</span> <span class="nc">MyArticle</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">AuthorsField</span><span class="p">(</span><span class="n">CustomUser</span><span class="p">)</span>
+    <span class="c"># the rest of your model...</span>
+</pre></div>
+</div>
+<p>Once you have an authors field, you can display a list of all of the users by
+casting the field to a string.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">articles</span> <span class="o">=</span> <span class="n">MyArticle</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">()</span>
+<span class="n">articles</span><span class="o">.</span><span class="n">authors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">bob</span><span class="p">)</span>
+<span class="n">articles</span><span class="o">.</span><span class="n">authors</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">alice</span><span class="p">)</span>
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">articles</span><span class="o">.</span><span class="n">authors</span>
+<span class="c"># outputs &quot;Bob Example, and Alice Example&quot;</span>
+</pre></div>
+</div>
+<p>You can create an HTML representation of your model by printing the <tt class="docutils literal"><span class="pre">.html</span></tt>
+attribute on the <tt class="docutils literal"><span class="pre">authors</span></tt> field like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">articles</span><span class="o">.</span><span class="n">authors</span><span class="o">.</span><span class="n">html</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>This returns a string with links to the profile for each user as determined by
+calling the user&#8217;s <tt class="docutils literal"><span class="pre">get_profile().get_absolute_url()</span></tt>.  It returns a
+plain-text name for any users that do not have a profile.</p>
+<p>Both casting to a string and converting to HTML take into consider any extra
+information or overrides that are configured for the given <tt class="docutils literal"><span class="pre">AuthorsField</span></tt>.</p>
+<div class="section" id="adding-additional-info-to-the-byline">
+<h3>Adding Additional Info to the Byline<a class="headerlink" href="#adding-additional-info-to-the-byline" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes you need to supply additional information to be used in the byline.
+By default, the <tt class="docutils literal"><span class="pre">AuthorsField</span></tt> looks for an <tt class="docutils literal"><span class="pre">authors_extra</span></tt> field on the
+model instance.  Anything you provide here is appended to the end of the known
+users.</p>
+<p>For example, if your model looked like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">armstrong.core.arm_content.fields</span> <span class="kn">import</span> <span class="n">AuthorsField</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">MyArticle</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">AuthorsField</span><span class="p">()</span>
+    <span class="n">authors_extra</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Then your instance would look like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">article</span> <span class="o">=</span> <span class="n">MyArticle</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">authors_extra</span><span class="o">=</span><span class="s">&quot;, and everyone else&quot;</span><span class="p">)</span>
+<span class="n">article</span><span class="o">.</span><span class="n">authors</span> <span class="o">=</span> <span class="p">[</span><span class="n">bob</span><span class="p">,</span> <span class="n">alice</span><span class="p">]</span>
+
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">article</span><span class="o">.</span><span class="n">authors</span>
+<span class="c"># outputs &quot;Bob Example, Alice Example, and everyone else&quot;</span>
+</pre></div>
+</div>
+<p>Note that there is no space between the &#8220;<tt class="docutils literal"><span class="pre">,</span></tt>&#8221; and the last name of a user.
+<tt class="docutils literal"><span class="pre">AuthorsField</span></tt> is smart enough to do the right thing depending on the first
+character.  For example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">article</span> <span class="o">=</span> <span class="n">MyArticle</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">authors_extra</span><span class="o">=</span><span class="s">&quot;and everyone else&quot;</span><span class="p">)</span>
+<span class="n">article</span><span class="o">.</span><span class="n">authors</span> <span class="o">=</span> <span class="p">[</span><span class="n">bob</span><span class="p">,</span> <span class="n">alice</span><span class="p">]</span>
+
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">article</span><span class="o">.</span><span class="n">authors</span>
+<span class="c"># outputs &quot;Bob Example, Alice Example and everyone else&quot;</span>
+</pre></div>
+</div>
+<p>If the first character is a letter (passes <tt class="docutils literal"><span class="pre">str.isalpha()</span></tt>), a space is added
+between the last name and the extra information.  It assumes that anything else
+is meant to be joined directly to the list, like the case of our earlier
+example that begins with a comma.</p>
+<div class="section" id="customizing-the-name-of-the-extra-field">
+<h4>Customizing the name of the extra field<a class="headerlink" href="#customizing-the-name-of-the-extra-field" title="Permalink to this headline">¶</a></h4>
+<p>You can provide a custom field name for the <tt class="docutils literal"><span class="pre">AuthorsField</span></tt> instead of the
+default <tt class="docutils literal"><span class="pre">authors_extra</span></tt> field.  To set it, provide a string that represents
+the field name to <tt class="docutils literal"><span class="pre">extra_field_name</span></tt> like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyArticle</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">AuthorsField</span><span class="p">(</span><span class="n">extra_field_name</span><span class="o">=</span><span class="s">&quot;custom_extra&quot;</span><span class="p">)</span>
+    <span class="n">custom_extra</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="overriding-the-byline">
+<h3>Overriding the Byline<a class="headerlink" href="#overriding-the-byline" title="Permalink to this headline">¶</a></h3>
+<p>You can also override the byline entirely with the <tt class="docutils literal"><span class="pre">authors_override</span></tt> field.
+If that field is present on a model and is not empty, it will be used in place
+of what would normally be generated.  Consider a model that looks like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">armstrong.core.arm_content.fields</span> <span class="kn">import</span> <span class="n">AuthorsField</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">MyArticle</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">AuthorsField</span><span class="p">()</span>
+    <span class="n">authors_override</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This behaves like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">article</span> <span class="o">=</span> <span class="n">MyArticle</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">authors_override</span><span class="o">=</span><span class="s">&quot;Custom byline&quot;</span><span class="p">)</span>
+<span class="n">article</span><span class="o">.</span><span class="n">authors</span> <span class="o">=</span> <span class="p">[</span><span class="n">bob</span><span class="p">,</span> <span class="n">alice</span><span class="p">]</span>
+
+<span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">article</span><span class="o">.</span><span class="n">authors</span>
+<span class="c"># outputs &quot;Custom byline&quot;</span>
+</pre></div>
+</div>
+<div class="section" id="customizing-the-name-of-the-override-field">
+<h4>Customizing the name of the override field<a class="headerlink" href="#customizing-the-name-of-the-override-field" title="Permalink to this headline">¶</a></h4>
+<p>You can change the override field name for an <tt class="docutils literal"><span class="pre">AuthorsField</span></tt> by providing
+the <tt class="docutils literal"><span class="pre">override_field_name</span></tt> keyward argument like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MyArticle</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">AuthorsField</span><span class="p">(</span><span class="n">override_field_name</span><span class="o">=</span><span class="s">&quot;custom_override&quot;</span><span class="p">)</span>
+    <span class="n">custom_override</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="authorsmixin-usage">
+<h2>AuthorsMixin Usage<a class="headerlink" href="#authorsmixin-usage" title="Permalink to this headline">¶</a></h2>
+<p>Armstrong uses mixins for grouping several fields together into a common,
+reusable object.  The <tt class="docutils literal"><span class="pre">AuthorsMixin</span></tt> allows you to add the default behavior
+of an authored model in Armstrong to your model.  You can mix it into your
+models like this:</p>
+<div class="highlight-python"><pre>from armstrong.core.arm_content.mixins import AuthorsMixin
+from django.db import models
+
+class MyArticle(AuthorsMixin, models.Model):
+    # Your fields here...</pre>
+</div>
+<p>Using this adds the <tt class="docutils literal"><span class="pre">authors</span></tt>, <tt class="docutils literal"><span class="pre">authors_extra</span></tt>, and <tt class="docutils literal"><span class="pre">authors_override</span></tt>
+fields to your model.</p>
+<div class="admonition important">
+<p class="first admonition-title">Important</p>
+<p class="last">Note parent object order.  You <em>must</em> declare the <tt class="docutils literal"><span class="pre">models.Model</span></tt> class as
+the last class in the list of parent classes.</p>
+</div>
+</div>
+<div class="section" id="admin-helpers">
+<h2>Admin Helpers<a class="headerlink" href="#admin-helpers" title="Permalink to this headline">¶</a></h2>
+<p>To keep things consistent inside Armstrong, we use the same fieldsets
+throughout the admin.  Use the <tt class="docutils literal"><span class="pre">armstrong.core.arm_content.fieldsets.AUTHORS</span></tt>
+variable to add the default author&#8217;s fieldset to your models.</p>
+<p>Your <tt class="docutils literal"><span class="pre">ModelAdmin</span></tt> should look similar to this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">armstrong.core.arm_content</span> <span class="kn">import</span> <span class="n">fieldsets</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">admin</span>
+
+<span class="k">class</span> <span class="nc">MyArticleAdmin</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">ModelAdmin</span><span class="p">):</span>
+    <span class="n">fieldsets</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="c"># your main fields here like this:</span>
+        <span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="p">{</span>
+            <span class="s">&quot;fields&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s">&quot;title&quot;</span><span class="p">,</span> <span class="s">&quot;body&quot;</span><span class="p">,</span> <span class="p">)</span>
+        <span class="p">}),</span>
+
+        <span class="n">fieldsets</span><span class="o">.</span><span class="n">AUTHORS</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>This is the same as adding the following to your <tt class="docutils literal"><span class="pre">fieldsets</span></tt> tuple:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="p">(</span><span class="s">&#39;Author Information&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s">&#39;fields&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;authors&#39;</span><span class="p">,</span> <span class="s">&#39;authors_override&#39;</span><span class="p">,</span> <span class="s">&#39;authors_extra&#39;</span><span class="p">),</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This is not currently internationalized</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Authors</a><ul>
+<li><a class="reference internal" href="#authorfield-usage">AuthorField Usage</a><ul>
+<li><a class="reference internal" href="#adding-additional-info-to-the-byline">Adding Additional Info to the Byline</a><ul>
+<li><a class="reference internal" href="#customizing-the-name-of-the-extra-field">Customizing the name of the extra field</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#overriding-the-byline">Overriding the Byline</a><ul>
+<li><a class="reference internal" href="#customizing-the-name-of-the-override-field">Customizing the name of the override field</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#authorsmixin-usage">AuthorsMixin Usage</a></li>
+<li><a class="reference internal" href="#admin-helpers">Admin Helpers</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../models/"
+                        title="previous chapter">Models</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../publications/"
+                        title="next chapter">Publications</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/authors.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search/" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex/" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../publications/" title="Publications"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../models/" title="Models"
+             >previous</a> |</li>
+        <li><a href="../">armstrong.core.arm_content v0.x documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+<div class="footer">
+    &copy; Copyright 2011, Bay Citizen &amp; Texas Tribune.
+  Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+  <br />Theme based on <a href="http://readthedocs.org/">Read The Docs</a>
+
+</div>
+
+
+
+
+
+  </body>
+</html>

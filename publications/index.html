@@ -28,7 +28,7 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/searchtools.js"></script>
     <link rel="top" title="armstrong.core.arm_content v0.x documentation" href="../" />
-    <link rel="next" title="Videos" href="../videos/" />
+    <link rel="next" title="Embedded Videos" href="../videos/" />
     <link rel="prev" title="Authors" href="../authors/" /> 
   </head>
   <body>
@@ -39,7 +39,7 @@
           <a href="../genindex/" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../videos/" title="Videos"
+          <a href="../videos/" title="Embedded Videos"
              accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="../authors/" title="Authors"
@@ -55,7 +55,72 @@
             
   <div class="section" id="publications">
 <h1>Publications<a class="headerlink" href="#publications" title="Permalink to this headline">¶</a></h1>
-<p><em>TODO</em></p>
+<p>Armstrong supplies two mixins for storing information on your model that
+explains its publication status.  These are used by default in the various
+<tt class="docutils literal"><span class="pre">armstrong.apps</span></tt> components that expose models that can be published.</p>
+<div class="section" id="mixins">
+<h2>Mixins<a class="headerlink" href="#mixins" title="Permalink to this headline">¶</a></h2>
+<p>All mixins are declared as <a class="reference external" href="https://docs.djangoproject.com/en/1.3/topics/db/models/#abstract-base-classes">abstract models</a>.  For more information on
+Armstrong&#8217;s use of mixins, see Armstrong Mixins.</p>
+<div class="admonition-todo admonition " id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Cross reference the yet-to-be-written Armstrong Mixins section.</p>
+</div>
+<div class="section" id="simplepublicationmixin">
+<h3><tt class="docutils literal"><span class="pre">SimplePublicationMixin</span></tt><a class="headerlink" href="#simplepublicationmixin" title="Permalink to this headline">¶</a></h3>
+<p>This provides what Armstrong deems as the minimum amount of information needed
+to determine the publication status.  It contains two fields:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">pub_date</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">DateTimeField</span><span class="p">(</span><span class="n">db_index</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">pub_status</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">((</span><span class="s">u&#39;Publication status&#39;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">choices</span><span class="o">=</span><span class="n">PUB_STATUS_CHOICES</span><span class="p">,</span> <span class="n">help_text</span><span class="o">=</span><span class="p">(</span>
+        <span class="s">u&#39;Only published items will appear on the site&#39;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The two constants used in <tt class="docutils literal"><span class="pre">pub_status</span></tt> are defined as:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">PUB_STATUS_CHOICES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="p">(</span><span class="s">&#39;D&#39;</span><span class="p">,</span> <span class="s">&#39;Draft&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;E&#39;</span><span class="p">,</span> <span class="s">&#39;Edit&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;P&#39;</span><span class="p">,</span> <span class="s">&#39;Published&#39;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s">&#39;T&#39;</span><span class="p">,</span> <span class="s">&#39;Trash&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">PUB_STATUSES</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">PUB_STATUS_CHOICES</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can use this mixin in your model like this:</p>
+<div class="highlight-python"><pre>from armstrong.core.arm_content import mixins
+from django.db import models
+
+class MyArticle(mixins.SimplePublicationMixin, models.Model):
+    # your custom fields here</pre>
+</div>
+<p>Note the order of the parent classes.  <tt class="docutils literal"><span class="pre">models.Model</span></tt> needs to come last in
+the list so Django can properly identify your object as a model.</p>
+</div>
+<div class="section" id="publicationmixin">
+<h3><tt class="docutils literal"><span class="pre">PublicationMixin</span></tt><a class="headerlink" href="#publicationmixin" title="Permalink to this headline">¶</a></h3>
+<p>This is an extension of the <tt class="docutils literal"><span class="pre">SimplePublicationMixin</span></tt> mixin and provides a
+<tt class="docutils literal"><span class="pre">sites</span></tt> field like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">sites</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ManyToManyField</span><span class="p">(</span><span class="n">Site</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You add it to your custom models the same way you do
+<tt class="docutils literal"><span class="pre">SimplePublicationMixin</span></tt>.</p>
+<div class="highlight-python"><pre>from armstrong.core.arm_content import mixins
+from django.db import models
+
+class MyArticle(mixins.SimplePublicationMixin, models.Model):
+    # your custom fields here</pre>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">There are plans to introduce a new <tt class="docutils literal"><span class="pre">Publication</span></tt> model that
+works similar to <tt class="docutils literal"><span class="pre">django.contrib.sites</span></tt>, but allows for multiple
+&#8220;publications&#8221; on each site.  Once that is added, it will be added to
+the <tt class="docutils literal"><span class="pre">PublicationMixin</span></tt>.</p>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -64,12 +129,24 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Publications</a><ul>
+<li><a class="reference internal" href="#mixins">Mixins</a><ul>
+<li><a class="reference internal" href="#simplepublicationmixin"><tt class="docutils literal"><span class="pre">SimplePublicationMixin</span></tt></a></li>
+<li><a class="reference internal" href="#publicationmixin"><tt class="docutils literal"><span class="pre">PublicationMixin</span></tt></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../authors/"
                         title="previous chapter">Authors</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="../videos/"
-                        title="next chapter">Videos</a></p>
+                        title="next chapter">Embedded Videos</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/publications.txt"
@@ -99,7 +176,7 @@
           <a href="../genindex/" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../videos/" title="Videos"
+          <a href="../videos/" title="Embedded Videos"
              >next</a> |</li>
         <li class="right" >
           <a href="../authors/" title="Authors"

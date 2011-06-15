@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
 
-    <title>Videos &mdash; armstrong.core.arm_content v0.x documentation</title>
+    <title>Embedded Videos &mdash; armstrong.core.arm_content v0.x documentation</title>
 
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
 
@@ -49,9 +49,142 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="videos">
-<h1>Videos<a class="headerlink" href="#videos" title="Permalink to this headline">¶</a></h1>
-<p><em>TODO</em></p>
+  <div class="section" id="embedded-videos">
+<h1>Embedded Videos<a class="headerlink" href="#embedded-videos" title="Permalink to this headline">¶</a></h1>
+<p>Armstrong provides a custom field for dealing with embedded videos.  That is,
+videos that are hosted elsewhere.  You can add your own backends (see <a class="reference internal" href="#creating-custom-backends">Creating
+Custom Backends</a>), or use the default ones that are included: Vimeo or
+YouTube.</p>
+<div class="section" id="configuring-embedded-videos">
+<h2>Configuring Embedded Videos<a class="headerlink" href="#configuring-embedded-videos" title="Permalink to this headline">¶</a></h2>
+<p>There are three settings that need to be set for you to use embedded video
+fields or mixins:</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">ARMSTRONG_EXTERNAL_VIDEO_BACKEND</span></tt></dt>
+<dd><p class="first">Each <tt class="docutils literal"><span class="pre">EmbeddedVideo</span></tt> (the actual representation of an <tt class="docutils literal"><span class="pre">EmbeddedVideoField</span></tt>)
+has a backend that parsed it and can handle turning the raw URL into an
+embedded form.  Armstrong comes with two backends by default, the
+<tt class="docutils literal"><span class="pre">VimeoBackend</span></tt> and <tt class="docutils literal"><span class="pre">YouTubeBackend</span></tt> located in the
+<tt class="docutils literal"><span class="pre">armstrong.core.arm_content.video.backends</span></tt> module.</p>
+<p>You can configure one or more backends by adding the
+<tt class="docutils literal"><span class="pre">ARMSTRONG_EXTERNAL_VIDEO_BACKEND</span></tt> settings.  To set one backend, use a
+string:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ARMSTRONG_EXTERNAL_VIDEO_BACKEND</span> <span class="o">=</span> <span class="s">&quot;armstrong.core.arm_content.video.backend.VimeoBackend&quot;</span>
+</pre></div>
+</div>
+<p>You can configure multiple backends by changing it to an iterable like this:</p>
+<div class="last highlight-python"><div class="highlight"><pre><span class="n">ARMSTRONG_EXTERNAL_VIDEO_BACKEND</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&quot;armstrong.core.arm_content.video.backend.VimeoBackend&quot;</span><span class="p">,</span>
+    <span class="s">&quot;armstrong.core.arm_content.video.backend.YouTubeBackend&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last"><tt class="docutils literal"><span class="pre">ARMSTRONG_EXTERNAL_VIDEO_BACKEND</span></tt> must be configured as of
+v0.3.x.  This is going to change in a future version.</p>
+</div>
+<div class="admonition-todo admonition " id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">Update docs once <a class="reference external" href="https://www.pivotaltracker.com/story/show/14622611">14622611</a> has been completed.</p>
+</div>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">ARMSTRONG_EMBED_VIDEO_WIDTH</span></tt> and <tt class="docutils literal"><span class="pre">ARMSTRONG_EMBED_VIDEO_HEIGHT</span></tt></dt>
+<dd>Many sites display all videos at a particular width and height.  Setting
+these values allows you specify those default values without having to pass
+<tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">height</span></tt> kwargs to <tt class="docutils literal"><span class="pre">embed</span></tt> on every call (see below).</dd>
+</dl>
+</div>
+<div class="section" id="using-the-field">
+<h2>Using the Field<a class="headerlink" href="#using-the-field" title="Permalink to this headline">¶</a></h2>
+<p>Use <tt class="docutils literal"><span class="pre">EmbeddedVideoField</span></tt> to store URLs that can be presented as an embeddable
+video.  <tt class="docutils literal"><span class="pre">EmbeddedVideoField</span></tt> is a subclass of Django&#8217;s built-in <tt class="docutils literal"><span class="pre">URLField</span></tt>,
+so all of the validation that occurs on that field is performed as well.</p>
+<p>You can add it to your model like any other field.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">armstrong.core.arm_content</span> <span class="kn">import</span> <span class="n">fields</span>
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Video</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">video</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">EmbeddedVideoField</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>You can access the embedded representation of the field via its <tt class="docutils literal"><span class="pre">embed</span></tt>
+method like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span> <span class="o">=</span> <span class="n">Video</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s">&quot;http://www.youtube.com/watch?v=QwIphm5wVAs&quot;</span><span class="p">)</span>
+<span class="n">html_code</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">embed</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><tt class="docutils literal"><span class="pre">html_code</span></tt> is now a string that looks like this (but without the <tt class="docutils literal"><span class="pre">\n</span></tt> that
+are included here for ease of reading) if you have a configured default
+width and height of <tt class="docutils literal"><span class="pre">480</span></tt> and <tt class="docutils literal"><span class="pre">270</span></tt>, respectively:</p>
+<div class="highlight-python"><pre>&lt;iframe title="YouTube video player" width="480" height="270"
+    src="http://www.youtube.com/embed/QwIphm5wVAs"
+    frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;</pre>
+</div>
+<p>You can specify the width and height of videos by providing a <tt class="docutils literal"><span class="pre">width</span></tt> and
+<tt class="docutils literal"><span class="pre">height</span></tt> kwarg, respectively.  Both the Vimeo and YouTube backends provided
+by Armstrong support this kwarg.  See <a class="reference internal" href="#configuring-embedded-videos">Configuring Embedded Videos</a> for
+more information about what backends are provided and what they support.</p>
+</div>
+<div class="section" id="using-the-mixin">
+<h2>Using the Mixin<a class="headerlink" href="#using-the-mixin" title="Permalink to this headline">¶</a></h2>
+<p>Armstrong also provides an <tt class="docutils literal"><span class="pre">EmbeddedVideoMixin</span></tt> if you prefer that style of
+declaration rather than explicitly adding the fields to your model.  You can
+add it like this:</p>
+<div class="highlight-python"><pre>from armstrong.core.arm_content import mixins
+from django.db import models
+
+class Video(mixins.EmbeddedVideoMixin, models.Model):
+    # your custom fields here</pre>
+</div>
+<p>This adds a field called <tt class="docutils literal"><span class="pre">video</span></tt> to your model.  Like all Armstrong mixin,
+make sure <tt class="docutils literal"><span class="pre">models.Model</span></tt> is the last class listed to ensure Django can
+recognize your model as a real model.</p>
+</div>
+<div class="section" id="creating-custom-backends">
+<h2>Creating Custom Backends<a class="headerlink" href="#creating-custom-backends" title="Permalink to this headline">¶</a></h2>
+<p>You can add your own backends by creating an object that provides two methods:
+<tt class="docutils literal"><span class="pre">prepare(video)</span></tt> and <tt class="docutils literal"><span class="pre">embed(**kwargs)</span></tt>.</p>
+<dl class="docutils">
+<dt><tt class="docutils literal"><span class="pre">prepare(video)</span></tt></dt>
+<dd>This is called by <tt class="docutils literal"><span class="pre">EmbeddedVideo</span></tt> when it is instantiated.  It receives
+the <tt class="docutils literal"><span class="pre">EmbeddedVideo</span></tt> instance that called it.  It should return <tt class="xref docutils literal"><span class="pre">True</span></tt>
+if was able to work, otherwise it should return <tt class="xref docutils literal"><span class="pre">None</span></tt>.  It should also
+be fault-tolerant.  It may get things that it URLs that it doesn&#8217;t know
+how to handle.  It shouldn&#8217;t raise any exceptions as other backends may
+know how to deal with the provided video URL.</dd>
+<dt><tt class="docutils literal"><span class="pre">embed(width=None,</span> <span class="pre">height=None)</span></tt></dt>
+<dd><p class="first">Embed is responsible for returning a chunk of HTML that can be used for
+displaying the embedded version of the URL.  Embed can utilize as many
+<tt class="docutils literal"><span class="pre">kwargs</span></tt> as it likes but must take a <tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">height</span></tt> keyword
+argument.  Any kwargs passed <tt class="docutils literal"><span class="pre">EmbeddedVideo.embed</span></tt> are passed through to
+the backend.  It is currently the job of the backend to be able to handle
+what is passed to it, so adding a <tt class="docutils literal"><span class="pre">**kwargs</span></tt> to your backend is
+suggested.</p>
+<p class="last">The <tt class="docutils literal"><span class="pre">armstrong.core.arm_content.video.backends.helpers.inject_defaults</span></tt>
+decorator determines the default <tt class="docutils literal"><span class="pre">width</span></tt> and <tt class="docutils literal"><span class="pre">height</span></tt> and adds them as
+kwargs for you.  It&#8217;s recommended that you decorate all of your backends
+with this so default width and heights are used.</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>Your custom backends must be capable of gracefully handling
+anything thrown at them.  <tt class="docutils literal"><span class="pre">prepare</span></tt> may encounter a video that
+it can&#8217;t parse and <tt class="docutils literal"><span class="pre">embed</span></tt> might get extra <tt class="docutils literal"><span class="pre">kwargs</span></tt> that it
+doesn&#8217;t use.</p>
+<p class="last">You need to handle these instances yourself, for now.  Once
+<a class="reference external" href="https://www.pivotaltracker.com/story/show/14628217">14628217</a> is implemented, backends can be simplified because
+the fault-tolerance will be moved further up the stack.  Tread
+carefully for now.</p>
+</div>
+<div class="admonition-todo admonition " id="index-1">
+<p class="first admonition-title">Todo</p>
+<p class="last">Update docs here once the code has changed</p>
+</div>
+</div>
 </div>
 
 
@@ -60,6 +193,17 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Embedded Videos</a><ul>
+<li><a class="reference internal" href="#configuring-embedded-videos">Configuring Embedded Videos</a></li>
+<li><a class="reference internal" href="#using-the-field">Using the Field</a></li>
+<li><a class="reference internal" href="#using-the-mixin">Using the Mixin</a></li>
+<li><a class="reference internal" href="#creating-custom-backends">Creating Custom Backends</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="../publications/"
                         title="previous chapter">Publications</a></p>

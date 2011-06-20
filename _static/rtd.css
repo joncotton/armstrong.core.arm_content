@@ -504,24 +504,24 @@ div.sidebar ul, div.sidebar ol {
 
 /* Admonitions and sidebars only */
 div.admonition, div.sidebar {
-    border: 1px solid #609060;
-    background-color: #e9ffe9;
+    border: 1px solid rgba(51, 77, 0, 1.0);
+    background-color: rgba(102, 153, 0, 0.1);
 }
 div.admonition p.admonition-title,
 div.sidebar p.sidebar-title {
-    background-color: #70a070;
-    border-bottom: 1px solid #609060;
+    background-color: rgba(102, 153, 0, 1.0);
+    border-bottom: 1px solid rgba(51, 77, 0, 1.0);
 }
 
 
 /* Warnings only */
 div.warning {
-    border: 1px solid #900000;
-    background-color: #ffe9e9;
+    border: 1px solid rgba(51, 13, 0, 1.0);
+    background-color: rgba(204, 51, 0, 0.1);
 }
 div.warning p.admonition-title {
-    background-color: #b04040;
-    border-bottom: 1px solid #900000;
+    background-color: rgba(204, 51, 0, 1.0);
+    border-bottom: 1px solid rgba(51, 13, 0, 1.0);
 }
 
 

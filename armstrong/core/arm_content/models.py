@@ -31,16 +31,16 @@ class ContentBase(AuthorsMixin, PublicationMixin, AccessMixin, models.Model):
     summary = models.TextField()
     slug = models.SlugField()
 
+    primary_section = models.ForeignKey(Section)
     sections = models.ManyToManyField(Section, null=True, blank=True,
             related_name="%(app_label)s_%(class)s_alternates")
 
     tags = TaggableManager(blank=True)
-    with_section = SectionSlugManager(section_field="sections")
+    with_section = SectionSlugManager(primary_section_field="primary_section",
+                                      section_field="sections")
 
     objects = InheritanceManager()
 
-    # TODO: add required primary section
-    # TODO: add secondary sections
     class Meta:
         abstract = True
 

@@ -7,5 +7,5 @@ PUBLICATION = ('Publication Information', {
 })
 
 TAXONOMY = ('Taxonomy', {
-    'fields': ('sections', 'tags', ),
+    'fields': ('primary_section', 'sections', 'tags', ),
 })

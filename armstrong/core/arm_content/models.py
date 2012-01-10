@@ -36,8 +36,7 @@ class ContentBase(AuthorsMixin, PublicationMixin, AccessMixin, models.Model):
             related_name="%(app_label)s_%(class)s_alternates")
 
     tags = TaggableManager(blank=True)
-    with_section = SectionSlugManager(primary_section_field="primary_section",
-                                      section_field="sections")
+    with_section = SectionSlugManager()
 
     objects = InheritanceManager()
 

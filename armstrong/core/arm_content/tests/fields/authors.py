@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import unittest
 from django.template import Template, Context
-import fudge
 try:
     import south
 except ImportError:
@@ -117,10 +116,7 @@ class AuthorsFieldTestCase(ArmContentTestCase):
         expected = "%s and %s" % (bob.get_full_name(), alice.get_full_name())
         article = random_authored_model(SimpleAuthoredModel, bob, alice)
 
-        settings = fudge.Fake()
-        settings.has_attr(AUTH_PROFILE_MODULE=None)
-        with fudge.patched_context(authors, 'settings', settings):
-            self.assertEqual(article.authors.html(), expected)
+        self.assertEqual(article.authors.html(), expected)
 
     def test_html_returns_string_with_html_links(self):
         bob, alice = generate_random_staff_users()

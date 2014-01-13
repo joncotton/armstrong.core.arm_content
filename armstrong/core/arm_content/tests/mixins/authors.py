@@ -8,7 +8,6 @@ from ..arm_content_support.models import SimpleProfile
 from ..arm_content_support.forms import SimpleMixedinAuthorForm
 
 from ...fields import AuthorsField
-from ...fields import authors
 
 
 class AuthorsMixinTestCase(ArmContentTestCase):
@@ -79,10 +78,7 @@ class AuthorsMixinTestCase(ArmContentTestCase):
         expected = "%s and %s" % (bob.get_full_name(), alice.get_full_name())
         article = random_authored_model(SimpleMixedinAuthorModel, bob, alice)
 
-        settings = fudge.Fake()
-        settings.has_attr(AUTH_PROFILE_MODULE=None)
-        with fudge.patched_context(authors, 'settings', settings):
-            self.assertEqual(article.authors.html(), expected)
+        self.assertEqual(article.authors.html(), expected)
 
     def test_html_returns_string_with_html_links(self):
         bob, alice = generate_random_staff_users()

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils import unittest
 from django.template import Template, Context
+from django.core.exceptions import ObjectDoesNotExist
 try:
     import south
 except ImportError:
@@ -111,12 +112,13 @@ class AuthorsFieldTestCase(ArmContentTestCase):
         self.assertEqual(1, str(article.authors).count(' and '),
                 msg="sanity check")
 
-    def test_html_returns_plain_list_if_not_configured_with_profiles(self):
+    def test_html_returns_plain_list_if_user_does_not_have_profile(self):
         bob, alice = generate_random_staff_users()
         expected = "%s and %s" % (bob.get_full_name(), alice.get_full_name())
         article = random_authored_model(SimpleAuthoredModel, bob, alice)
 
         self.assertEqual(article.authors.html(), expected)
+        self.assertRaises(ObjectDoesNotExist, bob.get_profile)
 
     def test_html_returns_string_with_html_links(self):
         bob, alice = generate_random_staff_users()

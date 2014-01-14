@@ -79,7 +79,7 @@ def build_package(dirpath, dirnames, filenames):
         in os.walk(info["name"].replace(".", "/"))]
 
 setup_kwargs = {
-    "author": "Bay Citizen & Texas Tribune",
+    "author": "Texas Tribune & The Center for Investigative Reporting",
     "author_email": "dev@armstrongcms.org",
     "url": "http://github.com/armstrong/%s/" % info["name"],
     "packages": packages,

@@ -11,45 +11,40 @@ foundation that the rest of the Armstrong content types are built off of.
 For more information, please see the `full documentation`_.
 
 .. change this link to point to docs inside docs.armstrongcms.org once its done
-.. _full documentation: http://armstrong.github.com/armstrong.core.arm_content/
+.. _full documentation: http://armstrong.github.io/armstrong.core.arm_content/
+
 
 Installation & Configuration
 ----------------------------
-You can install the latest release of ``armstrong.core.arm_content`` using
-`pip`_:
+#. ``pip install armstrong.core.arm_content``
 
-::
+#. Add ``taggit`` to your ``INSTALLED_APPS``
 
-    pip install armstrong.core.arm_content
+*Note:* You do not need to run ``syncdb`` or ``migrate`` after installing
+because this component does not have any concrete models. For the same reason,
+you do not need to add this to INSTALLED_APPS.
 
-You don't need to add ``armstrong.core.arm_content`` to your installed apps
-unless you want to use the include template tags.  You can add it like this:
+Optional Settings:
+""""""""""""""""""
 
-::
-
-	INSTALLED_APPS += ["armstrong.core.arm_content", ]
-
-Note that you do not need to run ``syncdb`` or ``migrate`` after installing
-``armstrong.core.arm_content`` as it does not have any models.
-
-.. _pip: http://www.pip-installer.org/
-
+* Add ``armstrong.core.arm_content`` to your ``INSTALLED_APPS`` if you want
+  to use the included template tags.
 
 State of Project
 ----------------
 Armstrong is an open-source news platform that is freely available to any
-organization.  It is the result of a collaboration between the `Texas Tribune`_
-and `Bay Citizen`_, and a grant from the `John S. and James L. Knight
-Foundation`_.
+organization. It is the result of a collaboration between the `Texas Tribune`_
+and `The Center for Investigative Reporting`_ and a grant from the
+`John S. and James L. Knight Foundation`_.
 
 To follow development, be sure to join the `Google Group`_.
 
-``armstrong.core.arm_content`` is part of the `Armstrong`_ project.  You're
+``armstrong.core.arm_content`` is part of the `Armstrong`_ project. You're
 probably looking for that.
 
 
 .. _Armstrong: http://www.armstrongcms.org/
-.. _Bay Citizen: http://www.baycitizen.org/
+.. _The Center for Investigative Reporting: http://cironline.org/
 .. _John S. and James L. Knight Foundation: http://www.knightfoundation.org/
 .. _Texas Tribune: http://www.texastribune.org/
 .. _Google Group: http://groups.google.com/group/armstrongcms
@@ -57,7 +52,7 @@ probably looking for that.
 
 License
 -------
-Copyright 2011-2012 Bay Citizen and Texas Tribune
+Copyright 2011-2014 Texas Tribune and The Center for Investigative Reporting
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

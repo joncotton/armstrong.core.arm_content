@@ -24,11 +24,23 @@ Installation & Configuration
 because this component does not have any concrete models. For the same reason,
 you do not need to add this to INSTALLED_APPS.
 
-Optional Settings:
-""""""""""""""""""
+Optional Settings & Requirements:
+"""""""""""""""""""""""""""""""""
 
-* Add ``armstrong.core.arm_content`` to your ``INSTALLED_APPS`` if you want
-  to use the included template tags.
+To use the Sorl features, like ``SorlThumbnailMixin``, you'll need two things:
+  #. Add ``sorl.thumbnail`` to your ``INSTALLED_APPS``
+
+  #. Install an imaging library. Sorl supports several and you'll need one
+     mentioned in their `docs`_.
+
+To use the included template tags:
+  #. Add ``armstrong.core.arm_content`` to your ``INSTALLED_APPS``
+
+  #. Follow the above directions to install Sorl.
+
+
+.. _docs: http://sorl-thumbnail.readthedocs.org/en/latest/requirements.html#image-library
+
 
 State of Project
 ----------------

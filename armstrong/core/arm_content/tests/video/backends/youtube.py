@@ -1,3 +1,4 @@
+import fudge
 from ..._utils import *
 
 from ....fields.video import EmbeddedVideo

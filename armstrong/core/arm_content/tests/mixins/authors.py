@@ -1,14 +1,15 @@
 # coding=utf-8
+import random
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
-from .._utils import *
 
-from ..arm_content_support.models import SimpleMixedinAuthorModel
-from ..arm_content_support.models import SimpleProfile
-
+from ..arm_content_support.models import SimpleMixedinAuthorModel, SimpleProfile
 from ..arm_content_support.forms import SimpleMixedinAuthorForm
-
 from ...fields import AuthorsField
+
+from .._utils import (
+    ArmContentTestCase, random_authored_model,
+    generate_random_staff_users, add_profile_to)
 
 
 class AuthorsMixinTestCase(ArmContentTestCase):

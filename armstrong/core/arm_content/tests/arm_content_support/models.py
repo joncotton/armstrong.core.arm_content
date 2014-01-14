@@ -3,15 +3,14 @@ from django.db import models
 
 import sorl.thumbnail
 
-from ...fields import AuthorsField
-from ...fields import EmbeddedVideoField
-from ... import mixins
+from ...fields import AuthorsField, EmbeddedVideoField
+from ...mixins import EmbeddedVideoMixin, AuthorsMixin
 from ...mixins.images.sorl import SorlThumbnailMixin
-from ...mixins.publication import PublishedManager
 from ...models import ContentBase
 
 
-from armstrong.apps.content.models import Content as ConcreteContent
+class ConcreteContent(ContentBase):
+    pass
 
 
 class ConcreteArticle(ConcreteContent):
@@ -26,7 +25,7 @@ class SimpleVideoModel(models.Model):
     source = EmbeddedVideoField()
 
 
-class SimpleMixedinVideoModel(mixins.EmbeddedVideoMixin, models.Model):
+class SimpleMixedinVideoModel(EmbeddedVideoMixin, models.Model):
     pass
 
 
@@ -34,7 +33,7 @@ class SimpleAuthoredModel(models.Model):
     authors = AuthorsField()
 
 
-class SimpleMixedinAuthorModel(mixins.AuthorsMixin, models.Model):
+class SimpleMixedinAuthorModel(AuthorsMixin, models.Model):
     pass
 
 
@@ -75,6 +74,7 @@ class ContentOne(ContentBase):
     name.
     """
     pass
+
 
 class ContentTwo(ContentBase):
     """

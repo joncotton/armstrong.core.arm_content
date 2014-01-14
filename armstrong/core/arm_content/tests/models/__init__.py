@@ -8,7 +8,6 @@ from ..arm_content_support.models import ConcreteArticle
 from ..arm_content_support.models import ConcreteCommentary
 from ..arm_content_support.models import ConcreteContent
 from ...models import ContentBase
-from ...models import Section
 
 now = datetime.datetime.now
 

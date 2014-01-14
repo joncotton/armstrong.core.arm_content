@@ -1,23 +1,25 @@
 # coding=utf-8
+import random
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils import unittest
 from django.template import Template, Context
 from django.core.exceptions import ObjectDoesNotExist
+
 try:
     import south
 except ImportError:
     south = False
 
-from ..arm_content_support.models import AuthoredModelWithConfiguredOverride
-from ..arm_content_support.models import AuthoredModelWithContentionalOverride
-from ..arm_content_support.models import AuthoredModelWithConfiguredExtra
-from ..arm_content_support.models import AuthoredModelWithContentionalExtra
-from ..arm_content_support.models import SimpleAuthoredModel
-from ..arm_content_support.models import SimpleProfile
-from .._utils import *
+from ..arm_content_support.models import (
+    AuthoredModelWithConfiguredOverride, AuthoredModelWithContentionalOverride,
+    AuthoredModelWithConfiguredExtra, AuthoredModelWithContentionalExtra,
+    SimpleAuthoredModel, SimpleProfile)
+from .._utils import (
+    ArmContentTestCase, generate_random_staff_users,
+    random_authored_model, add_authors_to, add_profile_to)
 
-from ...fields import authors
+from ...fields.authors import AuthorsField, AuthorsDescriptor
 
 
 class AuthorsFieldTestCase(ArmContentTestCase):
@@ -157,7 +159,7 @@ class AuthorsFieldTestCase(ArmContentTestCase):
 
     @unittest.skipIf(south is False, "south not installed")
     def test_provides_south_field_triple(self):
-        field = authors.AuthorsField()
+        field = AuthorsField()
         expected = (
             "%s.%s" % (field.__class__.__module__, field.__class__.__name__),
             [],
@@ -170,14 +172,14 @@ class AuthorsFieldTestCase(ArmContentTestCase):
         self.assertEqual(field.south_field_triple(), expected)
 
     def test_defaults_to_being_related_to_base_user(self):
-        field = authors.AuthorsField()
+        field = AuthorsField()
         self.assertEqual(field.rel.to, User)
 
     def test_can_relate_to_custom_user(self):
         class MyUser(models.Model):
             pass
 
-        field = authors.AuthorsField(to=MyUser)
+        field = AuthorsField(to=MyUser)
         self.assertEqual(field.rel.to, MyUser)
 
     def test_can_render_in_templates(self):
@@ -189,18 +191,17 @@ class AuthorsFieldTestCase(ArmContentTestCase):
         self.assertEqual(bob.get_full_name(), t.render(context))
 
 
-
 class AuthorsDescriptorTestCase(ArmContentTestCase):
     def test_does_not_choke_on_empty_instance(self):
         try:
-            authors_field = SimpleAuthoredModel.authors
+            SimpleAuthoredModel.authors
             self.assertTrue(True, "Was able to look at authors on the model")
         except AttributeError, e:
             self.fail("Should not have raised an exception: %s" % e)
 
     def test_returns_descriptor_when_retrieved_off_of_model(self):
         authors_field = SimpleAuthoredModel.authors
-        self.assertTrue(isinstance(authors_field, authors.AuthorsDescriptor))
+        self.assertTrue(isinstance(authors_field, AuthorsDescriptor))
 
     def test_can_accept_being_set_to_a_list(self):
         article = SimpleAuthoredModel.objects.create()

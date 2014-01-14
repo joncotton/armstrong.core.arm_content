@@ -1,5 +1,4 @@
 import fudge
-from fudge.inspector import arg
 import random
 from ..._utils import *
 
@@ -9,7 +8,6 @@ from .vimeo import *
 from ....video import backends
 from ....video.backends import helpers
 from armstrong.utils.backends.base import MultipleBackendProxy
-from armstrong.utils.backends import base
 
 
 class TestableBackend(object):

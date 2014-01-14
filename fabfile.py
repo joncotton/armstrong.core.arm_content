@@ -16,7 +16,6 @@ settings = {
         'armstrong.core.arm_sections',
         'armstrong.utils.backends',
         'south',
-        'lettuce.django',
         'sorl.thumbnail',
         'taggit',
     ),

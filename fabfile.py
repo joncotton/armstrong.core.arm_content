@@ -9,7 +9,6 @@ settings = {
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.sites',
-        'django.contrib.staticfiles',
         'armstrong.core.arm_access',
         'armstrong.core.arm_content',
         'armstrong.core.arm_content.tests.arm_content_support',

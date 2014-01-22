@@ -1,1 +1,2 @@
 armstrong.dev>=1.12.1,<2.0
+south<1.0

@@ -1,40 +1,29 @@
-# coding=utf-8
-from django.db import models
-from .._utils import *
+from .._utils import ArmContentTestCase
 
-from ..arm_content_support.models import ConcreteArticle
-from ...models import ContentBase
+from ..arm_content_support.models import ConcreteArticle, ConcreteContent
 
 import datetime
+
 
 class PublicationManagerTestCase(ArmContentTestCase):
     def setUp(self):
         self.published = ConcreteArticle.objects.create(
-                title="Published",
-                pub_date=datetime.datetime.now()-datetime.timedelta(days=1),
-                pub_status='P'
-            )
+            title="Published",
+            pub_date=datetime.datetime.now()-datetime.timedelta(days=1),
+            pub_status='P')
         self.draft_art = ConcreteArticle.objects.create(
-                title="Not Published",
-                pub_date=datetime.datetime.now()-datetime.timedelta(days=1),
-                pub_status='D'
-            )
+            title="Not Published",
+            pub_date=datetime.datetime.now()-datetime.timedelta(days=1),
+            pub_status='D')
         self.scheduled = ConcreteArticle.objects.create(
-                title="Future Published",
-                pub_date=datetime.datetime.now()+datetime.timedelta(days=1),
-                pub_status='P'
-            )
+            title="Future Published",
+            pub_date=datetime.datetime.now()+datetime.timedelta(days=1),
+            pub_status='P')
 
     def test_ContentBase_subclasses_have_published_manager(self):
-        class ConcreteContent(ContentBase):
-            pass
         self.assertTrue(hasattr(ConcreteContent, 'published'))
 
     def test_subclasses_of_concrete_classes_have_published_manager(self):
-        class ConcreteContent(ContentBase):
-            pass
-        class ConcreteArticle(ConcreteContent):
-            pass
         self.assertTrue(hasattr(ConcreteArticle, 'published'))
 
     def test_published_manager_only_pulls_published_content(self):

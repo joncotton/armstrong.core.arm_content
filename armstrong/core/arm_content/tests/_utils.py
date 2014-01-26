@@ -1,15 +1,9 @@
 from armstrong.dev.tests.utils import ArmstrongTestCase
-from armstrong.dev.tests.utils.concrete import *
-from armstrong.dev.tests.utils.users import *
+from armstrong.dev.tests.utils.users import generate_random_staff_users
 
 
 class ArmContentTestCase(ArmstrongTestCase):
     pass
-
-
-def add_n_users_to_authors(authors, *users):
-    for user in users:
-        authors.users.add(user)
 
 
 def add_profile_to(profile_class, *users):

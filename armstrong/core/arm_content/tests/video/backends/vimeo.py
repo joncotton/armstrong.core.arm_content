@@ -1,9 +1,9 @@
 import fudge
-from ..._utils import *
+import random
+from ..._utils import ArmContentTestCase
 
 from ....fields.video import EmbeddedVideo
 from ....video.backends import helpers
-from ....video.backends import vimeo
 from ....video.backends.vimeo import VimeoBackend
 
 

@@ -1,13 +1,16 @@
-from .._utils import *
+import random
 import datetime
 from django.db import models
 from taggit.managers import TaggableManager
 
+from armstrong.dev.tests.utils.concrete import (
+    concrete, create_concrete_table, destroy_concrete_table)
 from armstrong.core.arm_sections.models import Section
 from ..arm_content_support.models import ConcreteArticle
 from ..arm_content_support.models import ConcreteCommentary
 from ..arm_content_support.models import ConcreteContent
 from ...models import ContentBase
+from .._utils import ArmContentTestCase
 
 now = datetime.datetime.now
 

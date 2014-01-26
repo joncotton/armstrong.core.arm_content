@@ -3,45 +3,33 @@ import datetime
 from django.db import models
 from taggit.managers import TaggableManager
 
-from armstrong.dev.tests.utils.concrete import (
-    concrete, create_concrete_table, destroy_concrete_table)
 from armstrong.core.arm_sections.models import Section
-from ..arm_content_support.models import ConcreteArticle
-from ..arm_content_support.models import ConcreteCommentary
-from ..arm_content_support.models import ConcreteContent
-from ...models import ContentBase
+from ..arm_content_support.models import (
+    ConcreteArticle, ConcreteCommentary, ConcreteContent)
 from .._utils import ArmContentTestCase
 
 now = datetime.datetime.now
 
 
 class ContentBaseTestCase(ArmContentTestCase):
-    @create_concrete_table
-    def setUp(self):
-        self.model = concrete(ContentBase)
-
-    @destroy_concrete_table
-    def tearDown(self):
-        pass
-
     def test_has_a_title(self):
-        self.assertModelHasField(self.model(), "title", models.CharField)
+        self.assertModelHasField(ConcreteContent(), "title", models.CharField)
 
     def test_has_summary(self):
-        self.assertModelHasField(self.model(), "summary", models.TextField)
+        self.assertModelHasField(ConcreteContent(), "summary", models.TextField)
 
     def test_has_slug(self):
-        self.assertModelHasField(self.model(), "slug", models.SlugField)
+        self.assertModelHasField(ConcreteContent(), "slug", models.SlugField)
 
     def test_has_tags(self):
         # Must create a full model here so we have a pk for tags to be
         # associated with
-        model = self.model.objects.create(pub_date=now(),
+        model = ConcreteContent.objects.create(pub_date=now(),
                 pub_status="Published")
         self.assertModelHasField(model, "tags", TaggableManager)
 
     def test_has_sections(self):
-        model = self.model.objects.create(pub_date=now(),
+        model = ConcreteContent.objects.create(pub_date=now(),
                 pub_status="Published")
         self.assertRelatedTo(model, "sections", Section, many=True)
 
